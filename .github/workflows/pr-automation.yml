@@ -6,6 +6,7 @@ on:
 
 permissions:
   pull-requests: read
+  issues: write
 
 jobs:
   check-title:
@@ -15,30 +16,38 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const title = context.payload.pull_request.title;
+            const pr = context.payload.pull_request;
+            const title = pr.title;
             const regex = /^.+ \| [A-Za-z0-9]+$/;
 
+            const message = [
+              "❌ **Invalid Pull Request Title Format**",
+              "",
+              "**Required Format:**",
+              "`<Project Name> | <Roll Number>`",
+              "",
+              "**Important Rules:**",
+              '- Must include spaces on BOTH sides of |"',
+              "- Roll number should be alphanumeric (e.g., `22A51A0001`)",
+              "",
+              "**Examples**",
+              "✅ `AI Chatbot | 22A51A0001`",
+              "🚫 `AI Chatbot|22A51A0001`",
+              "",
+              `**Current title:** \"${title}\``,
+              "",
+              "👉 Please edit your PR title and try again."
+            ].join("\n");
+
             if (!regex.test(title)) {
-              core.setFailed([
-                "❌ Invalid Pull Request Title Format",
-                "",
-                "📌 Required Format:",
-                "<Project Name> | <Roll Number>",
-                "",
-                "⚠️ Important Rules:",
-                '- Must include spaces on BOTH sides of "|"',
-                "- Roll number should be alphanumeric (e.g., 22A51A0001)",
-                "",
-                "🚫 Incorrect Examples:",
-                "- AI Chatbot|22A51A0001",
-                "- AI Chatbot |",
-                "- | 22A51A0001",
-                "",
-                "✅ Correct Example:",
-                "- AI Chatbot | 22A51A0001",
-                "",
-                "👉 Please edit your PR title and try again."
-              ].join("\n"));
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: message
+              });
+
+              core.setFailed("Invalid Pull Request Title Format (see PR comment).\n");
             } else {
-              core.info(`✅ PR title is valid: "${title}"`);
+              core.info(`✅ PR title is valid: \"${title}\"`);
             }
