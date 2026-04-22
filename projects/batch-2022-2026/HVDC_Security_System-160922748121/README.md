@@ -1,3 +1,23 @@
+## 🔗👨‍💻 Team
+
+| Name                         | Roll Number  |
+| ---------------------------- | ------------ |
+| Mohammed Muzzammil Uddin     | 160922748121 |
+| Syed Moosa                   | 160922748166 |
+| Zuhaib Mohammed Abdul Waheed | 160922748160 |
+
+**Project Guide:**
+Mazher Uddin, Assistant Professor
+
+**Co-Guide / HoD:**
+Dr. Abdul Rasool Mohammed
+Associate Professor & Head of Department, CSE (AIML)
+
+**Institution:**
+Lords Institute of Engineering and Technology, Hyderabad
+
+---
+
 # HVDC CyberSec — Cyber-Physical Security Monitoring Platform
 
 ## Tech Stack
